@@ -1,6 +1,6 @@
 # madoos/docker-image-builder
 
-_Build images of docker._
+_Build images of docker with strategy dind._
 
 ## Getting Started
 
