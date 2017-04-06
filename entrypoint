@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -xe
+
+: "${GITHUB_USER?Need a GitHub username}"
+: "${GITHUB_REPO?Need a repository name}"
+: "${GITHUB_BRANCH?Need a GitHub branch}"
+: "${GITHUB_TOKEN?Need a GitHub token}"
+: "${DOCKER_USER?Need a Docker user}"
+: "${DOCKER_PASS?Need a Docker pass}"
+: "${DOCKER_IMAGE?Need a Docker pass}"
+
+if [[ -z "${GITHUB_TOKEN}" ]]; then
+  git clone -b "$GITHUB_BRANCH" https://github.com/"$GITHUB_USER"/"$GITHUB_REPO".git
+else
+  git clone -b "$GITHUB_BRANCH" https://"$GITHUB_TOKEN"@github.com/"$GITHUB_USER"/"$GITHUB_REPO".git
+fi
+
+cd $GITHUB_REPO
+
+# Login in docker
+docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+docker build -t $DOCKER_IMAGE .
+docker push $DOCKER_IMAGE
